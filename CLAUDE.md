@@ -1,7 +1,3 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Overview
 
 This is a LazyVim configuration repository that is symlinked to `~/.config/nvim/`. Changes made here are immediately reflected in the active Neovim configuration.
