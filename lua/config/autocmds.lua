@@ -6,14 +6,14 @@
 -- LazyVim enables spell check via lazyvim_wrap_spell augroup for:
 -- text, plaintex, typst, gitcommit, markdown
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "gitcommit" },
-    -- Alternative: uncomment additional filetypes to disable spell for them too
-    -- pattern = { "gitcommit", "markdown" },
-    -- pattern = { "gitcommit", "markdown", "text" },
-    -- pattern = { "text", "plaintex", "typst", "gitcommit", "markdown" },  -- all
-    callback = function()
-        vim.opt_local.spell = false
-    end,
+  pattern = { "gitcommit" },
+  -- Alternative: uncomment additional filetypes to disable spell for them too
+  -- pattern = { "gitcommit", "markdown" },
+  -- pattern = { "gitcommit", "markdown", "text" },
+  -- pattern = { "text", "plaintex", "typst", "gitcommit", "markdown" },  -- all
+  callback = function()
+    vim.opt_local.spell = false
+  end,
 })
 
 -- Alternative: Delete the entire augroup and recreate with only wrap (no spell)
