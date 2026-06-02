@@ -39,9 +39,9 @@ return {
 
 ### Formatter/Linter Architecture
 
-- **Formatting**: `conform.nvim` with Biome for JS/TS/JSON, Prettier for HTML
-- **Diagnostics**: LSP servers (jsonls for JSON, rust-analyzer for Rust, pylsp for Python)
-- **Pattern**: LSP handles diagnostics, external formatters handle formatting to avoid conflicts
+- **Formatting**: `conform.nvim` with Biome for JS/TS/JSON, Prettier for HTML, StyLua for Lua, xmllint for XML
+- **Diagnostics**: LSP servers (jsonls for JSON, rust-analyzer for Rust, ty for Python type checking, ruff for Python linting/formatting)
+- **Pattern**: LSP handles diagnostics, external formatters handle formatting to avoid conflicts. `lua_ls` formatting is disabled (StyLua owns it); `pylsp` is disabled (replaced by ty + ruff)
 
 Example in `lspconfig.lua`:
 ```lua
@@ -55,16 +55,17 @@ jsonls = {
 },
 ```
 
-### Enabled Language Extras
+### Enabled Extras
 
-From `lazyvim.json`: json, python, rust, typescript, yaml
+From `lazyvim.json`: mini-surround, fzf, typescript (+biome), json, python, rust, yaml
 
 ### Custom Plugins
 
-- `nvim-aider`: AI coding assistant integration (`<leader>a` prefix)
-- `night-owl.nvim`: Colorscheme
-- `rg.nvim`: Ripgrep integration (`:Rg` commands)
-- `blink.cmp`: Completion (disabled for lua/markdown filetypes)
+- `night-owl.nvim`: Colorscheme (loaded at startup, `priority = 1000`)
+- `rg.nvim`: Ripgrep integration (`:Rg`, `:Rgf`, `:Rgp`, `:Rgfp` commands)
+- `which-key.nvim`: Keymap hints (`<leader>?` for buffer-local keymaps)
+- `fff.nvim`: Fuzzy file finder + live grep, replacing the default `fzf-lua` find/grep bindings. Owns `<leader>/`, `<leader><space>`, `<leader>ff`/`fF`/`fg`, `<leader>sg`/`sG`/`sw`/`sW` (Root Dir vs cwd variants; `sw`/`sW` also work in visual mode on the selection). See `lua/plugins/fff.lua`.
+- `venv-selector.nvim`: **disabled** (unnecessary with ty + ruff)
 
 ## Symlink Structure
 
