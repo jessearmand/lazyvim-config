@@ -28,7 +28,7 @@ return {
         settings = {
           json = {
             validate = { enable = true },
-            format = { enable = false }, -- biome handles formatting
+            format = { enable = false }, -- oxfmt handles formatting
           },
         },
       },
