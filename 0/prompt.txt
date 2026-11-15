@@ -1,0 +1,19 @@
+I would like to make exception on `vim.opt.textwidth = 80` for code, code doesn't need line break by default, only text format that tend to have multiline text should have this configuration
+
+---
+
+Yes, let's also update AGENTS.md
+
+---
+
+Yes update .gitignore with secret patterns, I don't use it yet for lazyvim, because everything is local
+
+---
+
+I was testing out opening a json file, but I no longer see all the plugin commands
+
+SoftWrapMode, or any other
+
+---
+
+commit lockfile separately from the wrapping changes
