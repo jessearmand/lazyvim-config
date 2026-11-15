@@ -10,17 +10,24 @@ than assuming this repo diverges.
 
 ## Symlink Structure
 
-Symlinks are **per file, not per directory**:
+`~/.config/nvim` is a **single directory symlink** to this repository:
 
-- Root: `init.lua`, `lazyvim.json`, `.neoconf.json`, `stylua.toml`
-- `lua/config/`: `autocmds.lua`, `keymaps.lua`, `lazy.lua`, `options.lua`
-- `lua/plugins/`: `conform.lua`, `fff.lua`, `init.lua`, `lspconfig.lua`
+```
+~/.config/nvim -> ~/Develop/lazyvim-config
+```
 
-Consequence: **a newly added file in this repo is invisible to Neovim until it
-is symlinked by hand.** Adding `lua/plugins/foo.lua` and wondering why nothing
-happened is the expected first symptom.
+Consequences:
 
-Not symlinked, kept machine-local: `lazy-lock.json`, any file holding API keys.
+- **Every file in the repo is live.** A new `lua/plugins/foo.lua` is picked up
+  on the next Neovim start with no extra step.
+- **Neovim's runtime writes land in the working tree.** `lazy-lock.json` is
+  rewritten by `:Lazy install`/`update`/`sync`, so its git diff is the real
+  record of plugin bumps — review it before committing.
+- **There is no machine-local side.** Secrets go in a file that `.gitignore`
+  already covers (`.env*`, `secrets.lua`, `*.key`, `*.pem`, `*.token`, …) —
+  e.g. `lua/config/secrets.lua`, loaded with `pcall(require, "config.secrets")`
+  so a fresh clone without it still starts. Any other name will show up as
+  untracked and can be committed by accident.
 
 ## Formatting This Repo
 
@@ -58,6 +65,14 @@ These are the choices a reader cannot infer from stock LazyVim:
   `<leader>sg`/`sG`/`sw`/`sW`, each in Root Dir vs cwd variants; `sw`/`sW` also
   work in visual mode against the selection. fzf-lua is still installed and
   still owns everything else.
+- **Prose wraps at 80, code never auto-wraps.** `lua/plugins/wrapping.lua` sets
+  the *global* `textwidth=80` and then resets it to `0` locally for every
+  filetype outside its prose list. This looks backwards, but wrapping.nvim
+  needs it: with `textwidth=0` its heuristic detects every file as hard-wrapped,
+  and a buffer-local `textwidth` that differs from the global value is read as
+  "set deliberately", which also forces hard mode. Add prose filetypes to the
+  `text_filetypes` list in that file; it drives the lazy-load trigger, the
+  plugin's allowlist, and the code exception together.
 
 ## lazy.nvim Gotchas
 
@@ -66,9 +81,10 @@ Behaviours that have already caused confusion here:
 - **`enabled = false` deletes the plugin.** `:Lazy clean` treats a disabled
   plugin as orphaned and removes its directory. Turning an extra off and back on
   costs a full reinstall, not just a reload.
-- **The committed `lazy-lock.json` is stale by design.** It is not symlinked, so
-  the live lockfile at `~/.config/nvim/lazy-lock.json` diverges from the one in
-  git. Do not treat the committed copy as a record of what is installed.
+- **`lazy-lock.json` is the live lockfile.** Through the directory symlink, the
+  committed copy is the one lazy.nvim reads and writes. A spec change that only
+  adds one plugin can still produce a diff that bumps many others if `:Lazy
+  sync` or the update checker ran in between.
 - **`:Lazy sync` is install + clean + *update*.** To apply a spec change without
   bumping every other plugin, use `:Lazy install` and `:Lazy clean` separately.
   This config runs `version = false` with `checker.enabled = true`

@@ -10,6 +10,20 @@ data
 digest.txt
 .firecrawl/
 
+# Secrets — ~/.config/nvim symlinks to this repo, so there is no
+# machine-local side; keep keys out of git here. Load them in Lua with
+# pcall(require, "config.secrets") or read from the environment.
+.env
+.env.*
+!.env.example
+secrets.lua
+*.secret
+*.secrets
+*.key
+*.pem
+*.p12
+*.token
+
 # Created by https://www.toptal.com/developers/gitignore/api/macos,vim,zsh
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,vim,zsh
 
